@@ -1,0 +1,67 @@
+{
+  "provisioners": [],
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "boot_command": [
+        "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "/install/vmlinuz ",
+        " auto ",
+        " console-setup/ask_detect=false ",
+        " console-setup/layoutcode=us ",
+        " console-setup/modelcode=pc105 ",
+        " debconf/frontend=noninteractive ",
+        " debian-installer=en_US ",
+        " fb=false ",
+        " initrd=/install/initrd.gz ",
+        " kbd-chooser/method=us ",
+        " keyboard-configuration/layout=USA ",
+        " keyboard-configuration/variant=USA ",
+        " locale=en_US ",
+        " netcfg/get_domain=vm ",
+        " netcfg/get_hostname=vagrant ",
+        " grub-installer/bootdev=/dev/sda ",
+        " noapic ",
+        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg",
+        " -- <wait>",
+        "<enter><wait>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 10000,
+      "guest_os_type": "Ubuntu_64",
+      "headless": false,
+      "http_directory": "preseeds",
+      "iso_urls": "http://releases.ubuntu.com/16.04/ubuntu-16.04.2-server-amd64.iso",
+      "iso_checksum_type": "sha256",
+      "iso_checksum": "737ae7041212c628de5751d15c3016058b0e833fdc32e7420209b76ca3d0a535",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_wait_timeout": "20m",
+      "shutdown_command": "echo 'vagrant'|sudo -S shutdown -P now",
+      "vm_name": "packer-ubuntu-16.04-amd64",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "1024"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "1"
+        ]
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "output": "builds/{{.Provider}}-mastodon-ubuntu1604.box",
+      "type": "vagrant"
+    }
+  ]
+}
