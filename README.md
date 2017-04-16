@@ -23,7 +23,21 @@ $ pip install -r requirements.txt
 
 ## Building the box
 
-TODO
+Just execute:
+
+```sh
+$ packer build packer.json
+```
+
+_Note: It will take at least roughly 5 - 10 minutes for the ISO to get preseeded ("pre-provisioned") by the Debian installer, hence the rather long timeout/waiting period before packer actually starts provisioning. If you're unsure whether there is any progress change the values `headless` in the `packer.json` from `true` to `false` and re-run the process. This will give have VirtualBox show you the output of the console the ISO is running on._
+
+This will preseed the Ubuntu ISO image for Ubuntu Xenial 64bit with a couple of sane defaults and packages. Afterwards, the Ansible provisioner is run using the playbooks from the [mastodon-ansible](https://github.com/moritzheiber/mastodon-ansible) repository.
+
+In the end you should have a box in `builds/` with all the required components installed you can run directly in Vagrant.
+
+## Submitting to Atlas
+
+tbd
 
 ## Testing
 
