@@ -9,6 +9,28 @@
         "install -m0700 -o {{user `user`}} -g {{user `user`}} -d /home/{{user `user`}}/.ssh",
         "curl -SsL https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub -o /home/{{user `user`}}/.ssh/authorized_keys"
       ]
+    },
+    { "type": "shell",
+      "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+      "inline": [
+        "mount -o loop ${HOME}/VBoxGuestAdditions.iso /mnt",
+        "/mnt/VBoxLinuxAdditions.run install",
+        "umount /mnt",
+        "rm ${HOME}/VBoxGuestAdditions.iso"
+      ]
+    },
+    {
+      "type": "ansible",
+      "playbook_file": "ansible/playbook.yml"
+    },
+    { "type": "shell",
+      "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+      "script": "scripts/clean.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+      "script": "scripts/minimize.sh"
     }
   ],
   "builders": [
