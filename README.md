@@ -2,6 +2,8 @@
 
 This VirtualBox base image contains all the required packages and configuration for running/instantiating a Mastodon instance for development. It is build using [Hashicorp's Packer](https://packer.io), the provisioning is done with Ansible through a dedicated git submodule called [mastodon-ansible](https://github.com/moritzheiber/mastodon-ansible). The tests are using [ServerSpec](https://serverspec.org). The image is build continuously using [Hashicorp Atlas](https://atlas.hashicorp.com).
 
+_Note: Some of the content of the scripts in `scripts/` is borrowed from the [Bento](https://github.com/chef/bento) project._
+
 ## Prerequisites (for building on your own)
 
 - VirtualBox >= 5.1.x

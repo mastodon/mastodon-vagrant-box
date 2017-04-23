@@ -22,7 +22,11 @@
     {
       "type": "ansible",
       "playbook_file": "ansible/playbook.yml",
-      "extra_arguments": [ "--extra-vars", "\"mastodon_db_password=CHANGEME mastodon_db_login_unix_socket=/var/run/postgresql\"" ]
+      "extra_arguments": [ "--extra-vars", "mastodon_db_password=CHANGEME" ],
+      "ansible_env_vars": [
+        "ANSIBLE_REMOTE_TEMP=\"~/.ansible-tmp\"",
+        "ANSIBLE_SSH_PIPELINING=True"
+      ]
     },
     { "type": "shell",
       "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
