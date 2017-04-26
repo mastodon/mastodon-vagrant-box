@@ -23,12 +23,12 @@ $ source env/bin/activate
 $ pip install -r requirements.txt
 ```
 
-## Building the box
+## Building the box locally
 
 Just execute:
 
 ```sh
-$ packer build packer.json
+$ packer build packer.local.json
 ```
 
 _Note: It will take at least roughly 5 - 10 minutes for the ISO to get preseeded ("pre-provisioned") by the Debian installer, hence the rather long timeout/waiting period before packer actually starts provisioning. If you're unsure whether there is any progress change the values `headless` in the `packer.json` from `true` to `false` and re-run the process. This will give have VirtualBox show you the output of the console the ISO is running on._
@@ -39,7 +39,15 @@ In the end you should have a box in `builds/` with all the required components i
 
 ## Submitting to Atlas
 
-tbd
+[HashiCorp](https://www.hashicorp.com)'s Atlas can be used to build new boxes. Usually it's either very difficult or impossible to build them on other SaaS offerings (because you need a fully virtualized environment to run VirtualBox). To push a new configuration to Atlas run:
+
+```sh
+$ packer push -token=<your-token> packer.atlas.json
+```
+
+Only files that are checked into git are uploaded/submitted to Packer Enterprise (i.e. everything in `.gitignore` stays where it is).
+
+_Note: There is a organization within Packer Enterprise called `mastodon` which is responsible for the Vagrant boxes under the same namespace. If you think you can/want to contribute send me a message on @moritzheiber@mastodon.social and I'll add your to the organization. This GitHub repository is bound to the Packer Enterprise configuration `mastodon/ubuntu-xenial64` and will trigger a new build for each commit._
 
 ## Testing
 
