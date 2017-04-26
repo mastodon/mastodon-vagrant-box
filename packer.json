@@ -15,6 +15,7 @@
       "inline": [
         "mount -o loop ${HOME}/VBoxGuestAdditions.iso /mnt",
         "/mnt/VBoxLinuxAdditions.run install",
+        "ln -sf /usr/lib/VBoxGuestAdditions/mount.vboxsf /sbin/mount.vboxsf",
         "umount /mnt",
         "rm ${HOME}/VBoxGuestAdditions.iso"
       ]
@@ -52,13 +53,13 @@
         " console-setup/layoutcode=us ",
         " console-setup/modelcode=pc105 ",
         " debconf/frontend=noninteractive ",
-        " debian-installer=en_US ",
+        " debian-installer=en_US.UTF-8 ",
         " fb=false ",
         " initrd=/install/initrd.gz ",
         " kbd-chooser/method=us ",
         " keyboard-configuration/layout=USA ",
         " keyboard-configuration/variant=USA ",
-        " locale=en_US ",
+        " locale=en_US.UTF-8 ",
         " netcfg/get_domain=vm ",
         " netcfg/get_hostname=vagrant ",
         " grub-installer/bootdev=/dev/sda ",

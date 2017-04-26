@@ -5,6 +5,18 @@
     "atlas_token": ""
   },
   "provisioners": [
+    {
+      "type": "shell-local",
+      "command": "sudo apt-get update -qq"
+    },
+    {
+      "type": "shell-local",
+      "command": "sudo apt-get install -y ansible git-core"
+    },
+    {
+      "type": "shell-local",
+      "command": "git submodule init ansible"
+    },
     { "type": "shell",
       "inline": [
         "install -m0700 -o {{user `user`}} -g {{user `user`}} -d /home/{{user `user`}}/.ssh",
@@ -102,8 +114,12 @@
         "created_at": "{{timestamp}}",
         "description": "A Vagrant image for Mastodon development",
         "provider": "virtualbox-iso",
-        "version": "{{isotime \"20060102T15_04_05\"}}"
+        "version": "{{isotime \"20060102T15_04_05\"}}.0"
       }
     }
-  ]
+  ],
+  "push": {
+    "name": "mastodon/ubuntu-xenial64",
+    "vcs": true
+  }
 }
