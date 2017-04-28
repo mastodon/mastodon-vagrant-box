@@ -1,8 +1,7 @@
 {
   "variables": {
     "user": "vagrant",
-    "password": "vagrant",
-    "atlas_token": ""
+    "password": "vagrant"
   },
   "provisioners": [
     {
@@ -34,7 +33,12 @@
     },
     {
       "type": "ansible",
-      "playbook_file": "ansible/playbook.yml"
+      "playbook_file": "ansible/playbook.yml",
+      "extra_arguments": [ "--extra-vars", "mastodon_db_password=CHANGEME" ],
+      "ansible_env_vars": [
+        "ANSIBLE_REMOTE_TEMP=\"~/.ansible-tmp\"",
+        "ANSIBLE_SSH_PIPELINING=True"
+      ]
     },
     { "type": "shell",
       "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
@@ -60,13 +64,13 @@
         " console-setup/layoutcode=us ",
         " console-setup/modelcode=pc105 ",
         " debconf/frontend=noninteractive ",
-        " debian-installer=en_US ",
+        " debian-installer=en_US.UTF-8 ",
         " fb=false ",
         " initrd=/install/initrd.gz ",
         " kbd-chooser/method=us ",
         " keyboard-configuration/layout=USA ",
         " keyboard-configuration/variant=USA ",
-        " locale=en_US ",
+        " locale=en_US.UTF-8 ",
         " netcfg/get_domain=vm ",
         " netcfg/get_hostname=vagrant ",
         " grub-installer/bootdev=/dev/sda ",
