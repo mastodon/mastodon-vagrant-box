@@ -15,7 +15,7 @@
     },
     {
       "type": "shell-local",
-      "command": "git submodule init ansible"
+      "command": "git submodule update --recurse --init"
     },
     { "type": "shell",
       "inline": [
@@ -107,7 +107,6 @@
   "post-processors": [
     {
       "type": "atlas",
-      "token": "{{user `atlas_token`}}",
       "artifact": "mastodon/ubuntu-xenial64",
       "artifact_type": "vagrant.box",
       "metadata": {
@@ -120,6 +119,13 @@
   ],
   "push": {
     "name": "mastodon/ubuntu-xenial64",
-    "vcs": true
+    "vcs": false,
+    "include": [
+      ".git*",
+      ".git/*",
+      ".git/**/*",
+      "preseeds/*",
+      "scripts/*"
+    ]
   }
 }
