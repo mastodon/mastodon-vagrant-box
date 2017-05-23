@@ -5,16 +5,13 @@
   },
   "provisioners": [
     {
-      "type": "shell-local",
-      "command": "sudo apt-get update -qq"
-    },
-    {
-      "type": "shell-local",
-      "command": "sudo apt-get install -y ansible git-core"
-    },
-    {
-      "type": "shell-local",
-      "command": "git submodule update --recurse --init"
+      "type": "shell",
+      "inline": [
+        "sudo apt-get update -qq",
+        "sudo apt-get install -y git-core python-pip python-apt libffi-dev libssl-dev build-essential python-virtualenv python-setuptools",
+        "mkdir -p /tmp/mastodon",
+        "git clone https://github.com/tootsuite/mastodon-ansible /tmp/mastodon/ansible"
+      ]
     },
     { "type": "shell",
       "inline": [
@@ -32,23 +29,30 @@
       ]
     },
     {
-      "type": "ansible",
-      "playbook_file": "ansible/playbook.yml",
-      "command": "./ansible-playbook-workaround",
-      "extra_arguments": [ "--extra-vars", "mastodon_db_password=CHANGEME" ],
-      "ansible_env_vars": [
-        "ANSIBLE_REMOTE_TEMP=\"~/.ansible-tmp\"",
-        "ANSIBLE_SSH_PIPELINING=True"
+      "type": "shell",
+      "inline": [
+        "virtualenv venv",
+        ". venv/bin/activate",
+        "pip install --upgrade ansible==2.2.2.0"
       ]
     },
-    { "type": "shell",
-      "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
-      "script": "scripts/clean.sh"
+    {
+      "type": "file",
+      "source": "config/ansible.hosts",
+      "destination": "/tmp/mastodon/ansible.hosts"
+    },
+    {
+      "type": "shell",
+      "environment_vars": ["ANSIBLE_REMOTE_TEMP=\"/tmp/mastodon/.ansible-tmp\"", "ANSIBLE_SSH_PIPELINING=True" ],
+      "inline": [
+        ". venv/bin/activate",
+        "ansible-playbook -i /tmp/mastodon/ansible.hosts -v -b --extra-vars mastodon_db_password=CHANGEME /tmp/mastodon/ansible/playbook.yml"
+      ]
     },
     {
       "type": "shell",
       "execute_command": "{{ .Vars }} sudo -E -S sh '{{ .Path }}'",
-      "script": "scripts/minimize.sh"
+      "scripts": ["scripts/clean.sh", "scripts/minimize.sh"]
     }
   ],
   "builders": [
@@ -117,20 +121,12 @@
       "metadata": {
         "created_at": "{{timestamp}}",
         "description": "A Vagrant image for Mastodon development",
-        "provider": "virtualbox-iso",
-        "version": "{{isotime \"20060102T15_04_05\"}}.0"
+        "provider": "virtualbox-iso"
       }
     }
   ],
   "push": {
     "name": "mastodon/ubuntu-xenial64",
-    "vcs": false,
-    "include": [
-      ".git*",
-      ".git/*",
-      ".git/**/*",
-      "preseeds/*",
-      "scripts/*"
-    ]
+    "vcs": true
   }
 }
